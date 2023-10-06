@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabesz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div>
+            <div>codegird</div>
+            <div>One block at a time</div>
+        </div>
+        <div>Est 2027</div>
+    </nav>
+
+    <div class="marker-wapper">
+        <div class="marker">
+            <div class="grab"></div>
+        </div>
+        <div class="active-slide">1/10</div>
+    </div>
+
+    <div class="slider">
+        <div class="slider-wapper">
+            <div class="slide">
+                <img src="1.jpg" >
+            </div>
+            <div class="slide">
+                <img src="2.jpg" >
+            </div>
+            <div class="slide">
+                <img src="3.jpg" >
+            </div>
+            <div class="slide">
+                <img src="4.jpg" >
+            </div>
+            <div class="slide">
+                <img src="1.jpg" >
+            </div>
+            <div class="slide">
+                <img src="2.jpg" >
+            </div>
+            <div class="slide">
+                <img src="3.jpg" >
+            </div>
+            <div class="slide">
+                <img src="4.jpg" >
+            </div>
+            <div class="slide">
+                <img src="1.jpg" >
+            </div>
+            <div class="slide">
+                <img src="2.jpg" >
+            </div>
+            <div class="slide">
+                <img src="3.jpg" >
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>Eilt website</div>
+        <div>nagygabor </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        let target = 0;
+        let current = 0;
+        let ease = 0.075;
+
+        const slider = document.querySelector(".slider");
+        const sliderWrapper = document.querySelector(".slider-wapper");
+        const markerWapper = document.querySelector(".marker-wapper");
+        const activeSlide = document.querySelector(".active-slide")
+        
+        let maxScroll = sliderWrapper.offsetWidth - window.innerWidth;
+
+        function lerp(start, end, factor){
+            return start* (end-start)*factor;
+        }
+
+        function updateActiveSliderNuber(markerMove,markerMaxMove) {
+            const currentPart = Math.round((markerMove - 70)/partWidth)+1;
+            currentPart = Math.min(10, currentPart)
+            activeSlide.textContent = `${currentPart}/10`;
+        }
+
+        function update() {
+            current = lerp(current, target, ease);
+
+            gsap.set(".slider-wapper", {
+                x: -current,
+            })
+
+            let moveRatio = current/maxScroll;
+
+            let markerMaxMove = window.innerWidth - markerWapper.offsetWidth - 170;
+
+            let markerMove = 70 + moveRatio * markerMaxMove;
+            gsap.set(".marker-wapper", {
+                x: markerMove,
+            });
+
+            updateActiveSliderNumber(markerMove, markerMaxMove);
+
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener("resize", () => {
+            maxScroll = sliderWrapper.offsetWidth - window.innerWidth;
+        });
+
+        window.addEventListener("wheel", (e) => {
+            target += e.deltaY;
+            target = Math.max(0, target);
+            target = Math.min(maxScroll, target)
+        })
+
+        update();
+    </script>
+
+
+</body>
+</html>
